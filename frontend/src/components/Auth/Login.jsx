@@ -14,9 +14,6 @@ const Login = () => {
   const [enteredPassword, setEnteredPassword] = useState("");
   const [isLoading, setisLoading] = useState(false);
 
-  // useEffect(() => {
-  //   axios.defaults.headers.post["Content-Type"] = "application/json";
-  // }, []);
   const loginHandler = (e) => {
     setisLoading(true);
     e.preventDefault();
@@ -27,7 +24,6 @@ const Login = () => {
     axios
       .post("http://localhost:3000/users/login", data)
       .then((res) => {
-        console.log(res?.data?.token);
         localStorage.removeItem("token");
         localStorage.setItem("token", res?.data?.token);
         dispatch(login());

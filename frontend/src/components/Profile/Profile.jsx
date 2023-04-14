@@ -12,7 +12,7 @@ const Profile = () => {
       .then((res) => {
         setUser(res?.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast(err?.response?.data?.meassage));
   }, []);
   const deleteProfileHandler = () => {
     axios.delete("http://localhost:3000/users/me").then((res) => {

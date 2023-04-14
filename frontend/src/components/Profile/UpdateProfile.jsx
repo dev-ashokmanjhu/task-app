@@ -16,7 +16,7 @@ const UpdateProfile = () => {
         setEnteredEmail(res?.data?.email);
         setEnteredName(res?.data?.name);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast(err?.response?.data?.meassage));
   }, []);
 
   const UpdateProfileHandler = (e) => {
@@ -31,9 +31,8 @@ const UpdateProfile = () => {
       .then((res) => {
         toast("Profile has been Updated");
         navigate("/profile");
-        // console.log(res.data.token);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast(err?.response?.data?.meassage));
   };
 
   return (

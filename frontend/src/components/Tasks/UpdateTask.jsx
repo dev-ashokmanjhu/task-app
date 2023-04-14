@@ -7,24 +7,24 @@ import { toast } from "react-toastify";
 
 const UpdateTask = () => {
   const navigate = useNavigate();
-  // const [enteredName, setEnteredName] = useState("");
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredTaskStatus, setEnteredTaskStatus] = useState(false);
   const [task, setTask] = useState([]);
 
   const { id } = useParams();
   useEffect(() => {
-    axios.get(`http://localhost:3000/tasks/${id}`).then((res) => {
-      setEnteredDescription(res.data.description);
-      setEnteredTaskStatus(res.data.completed.toString());
-    });
-    // setEnteredName(task.name);
+    axios
+      .get(`http://localhost:3000/tasks/${id}`)
+      .then((res) => {
+        setEnteredDescription(res.data.description);
+        setEnteredTaskStatus(res.data.completed.toString());
+      })
+      .catch((err) => toast(err?.response?.data?.meassage));
   }, []);
 
   const updateTaskHandler = (e) => {
     e.preventDefault();
     const data = {
-      // name: enteredName,
       description: enteredDescription,
       completed: enteredTaskStatus,
     };
@@ -33,12 +33,8 @@ const UpdateTask = () => {
       .then((res) => {
         toast("Task Updated");
         navigate("/");
-        // localStorage.removeItem("token");
-        // localStorage.setItem("token", res?.data?.token);
-        // dispatch(login());
-        // navigate("/");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast(err?.response?.data?.meassage));
   };
   return (
     <Modal>
@@ -48,23 +44,7 @@ const UpdateTask = () => {
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
               Update Task
             </h5>
-            {/* <div>
-              <label
-                htmlFor="name"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Task Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                placeholder="Name"
-                required
-                onChange={(e) => setEnteredName(e.target.value)}
-              />
-            </div> */}
+
             <div>
               <label
                 htmlFor="description"
@@ -78,7 +58,7 @@ const UpdateTask = () => {
                 id="description"
                 value={enteredDescription}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                placeholder="name@company.com"
+                placeholder="Task Description"
                 required
                 onChange={(e) => setEnteredDescription(e.target.value)}
               />
@@ -90,16 +70,40 @@ const UpdateTask = () => {
               >
                 Completed
               </label>
-              <input
-                type="text"
-                name="boolean"
-                id="boolean"
-                value={enteredTaskStatus}
-                placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                onChange={(e) => setEnteredTaskStatus(e.target.value)}
-              />
+              <div className="flex flex-wrap">
+                <div className="flex items-center mr-4">
+                  <input
+                    id="red-radio"
+                    type="radio"
+                    value="false"
+                    name="colored-radio"
+                    onChange={(e) => setEnteredTaskStatus(e.target.value)}
+                    className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    htmlFor="red-radio"
+                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    In Progress
+                  </label>
+                </div>
+                <div className="flex items-center mr-4">
+                  <input
+                    id="green-radio"
+                    type="radio"
+                    value="true"
+                    name="colored-radio"
+                    onChange={(e) => setEnteredTaskStatus(e.target.value)}
+                    className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    htmlFor="green-radio"
+                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Done
+                  </label>
+                </div>
+              </div>
             </div>
 
             <button

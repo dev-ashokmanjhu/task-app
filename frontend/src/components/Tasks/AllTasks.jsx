@@ -16,9 +16,11 @@ const AllTasks = () => {
   };
 
   const taskDeleteHandler = useCallback((id) => {
-    axios.delete(`http://localhost:3000/task/${id}`);
+    axios
+      .delete(`http://localhost:3000/task/${id}`)
+      .catch((err) => toast(err?.response?.data?.meassage));
     getTasks();
-    toast("Task Deleted");
+    toast.warn("Task Deleted");
   }, []);
 
   useEffect(() => {

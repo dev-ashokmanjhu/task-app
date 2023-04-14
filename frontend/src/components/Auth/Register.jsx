@@ -30,7 +30,6 @@ const Register = () => {
         toast("Registered Successfully");
         navigate("/");
         setisLoading(false);
-        // console.log(res.data.token);
       })
       .catch((err) => {
         toast(err?.response?.data?.meassage), setisLoading(false);
