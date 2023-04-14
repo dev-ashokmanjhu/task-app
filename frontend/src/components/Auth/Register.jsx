@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../store/authSlice";
+import { toast } from "react-toastify";
+import Spinner from "../../UI/Spinner";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -10,9 +12,11 @@ const Register = () => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [isLoading, setisLoading] = useState(false);
 
   const registerHandler = (e) => {
     e.preventDefault();
+    setisLoading(true);
     const data = {
       name: enteredName,
       email: enteredEmail,
@@ -23,10 +27,14 @@ const Register = () => {
       .then((res) => {
         localStorage.setItem("token", res?.data?.token);
         dispatch(login());
+        toast("Registered Successfully");
         navigate("/");
+        setisLoading(false);
         // console.log(res.data.token);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        toast(err?.response?.data?.meassage), setisLoading(false);
+      });
   };
 
   return (
@@ -93,7 +101,7 @@ const Register = () => {
             className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={registerHandler}
           >
-            Register
+            {isLoading ? <Spinner color="white" /> : "Register"}
           </button>
           <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
             Already Have an Account?{" "}
