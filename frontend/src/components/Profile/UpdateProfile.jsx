@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../../utils/constants";
 
 const UpdateProfile = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const UpdateProfile = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/users/me")
+      .get(`${BASE_URL}/users/me`)
       .then((res) => {
         setEnteredEmail(res?.data?.email);
         setEnteredName(res?.data?.name);
@@ -27,7 +28,7 @@ const UpdateProfile = () => {
       // password: enteredPassword,
     };
     axios
-      .put("http://localhost:3000/users/me", data)
+      .put(`${BASE_URL}/users/me`, data)
       .then((res) => {
         toast("Profile has been Updated");
         navigate("/profile");
@@ -95,7 +96,6 @@ const UpdateProfile = () => {
               onChange={(e) => setEnteredPassword(e.target.value)}
             />
           </div> */}
-
           <button
             type="submit"
             className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

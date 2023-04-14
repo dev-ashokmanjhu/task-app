@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../store/authSlice";
 import { toast } from "react-toastify";
 import Spinner from "../../UI/Spinner";
+import { BASE_URL } from "../../utils/constants";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Register = () => {
       password: enteredPassword,
     };
     axios
-      .post("http://localhost:3000/users", data)
+      .post(`${BASE_URL}/users`, data)
       .then((res) => {
         localStorage.setItem("token", res?.data?.token);
         dispatch(login());

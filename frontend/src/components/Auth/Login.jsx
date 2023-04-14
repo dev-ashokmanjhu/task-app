@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { URL } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/authSlice";
 import { toast } from "react-toastify";
 import Spinner from "../../UI/Spinner";
+import { BASE_URL } from "../../utils/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Login = () => {
       password: enteredPassword,
     };
     axios
-      .post("http://localhost:3000/users/login", data)
+      .post(`${BASE_URL}/users/login`, data)
       .then((res) => {
         localStorage.removeItem("token");
         localStorage.setItem("token", res?.data?.token);

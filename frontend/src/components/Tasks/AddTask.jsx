@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../../utils/constants";
+
 const AddTask = () => {
   const navigate = useNavigate();
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredTaskStatus, setEnteredTaskStatus] = useState(false);
+
   const createTaskHandler = (e) => {
     e.preventDefault();
     if (enteredDescription.trim() === "") {
@@ -17,13 +20,14 @@ const AddTask = () => {
       completed: enteredTaskStatus,
     };
     axios
-      .post("http://localhost:3000/task", data)
+      .post(`${BASE_URL}/task`, data)
       .then((res) => {
         toast.success("Task Created");
         navigate("/");
       })
-      .catch((err) => toast(err?.response?.data?.meassage));
+      .catch((err) => toast.error(err?.response?.data?.meassage));
   };
+
   return (
     <div className="flex justify-center">
       <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">

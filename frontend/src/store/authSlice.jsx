@@ -10,14 +10,14 @@ const authSlice = createSlice({
   reducers: {
     login(state) {
       state.isAuthenticated = true;
-      toast("Login Successfully");
+      toast.success("Login Successfully");
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.getItem("token")}`;
     },
     logout(state) {
       state.isAuthenticated = false;
-      toast("Logout Successfully");
+      toast.warn("Logout Successfully");
       axios.defaults.headers.common["Authorization"] = "";
     },
   },

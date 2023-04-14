@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/authSlice";
+import { BASE_URL } from "../../utils/constants";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -11,20 +12,20 @@ const Profile = () => {
   const [user, setUser] = useState({});
   useEffect(() => {
     axios
-      .get("http://localhost:3000/users/me")
+      .get(`${BASE_URL}/users/me`)
       .then((res) => {
         setUser(res?.data);
       })
       .catch((err) => toast(err?.response?.data?.meassage));
   }, []);
   const deleteProfileHandler = () => {
-    axios.delete("http://localhost:3000/users/me").then((res) => {
+    axios.delete(`${BASE_URL}/users/me`).then((res) => {
       toast.error("User Deleted Successfully!");
       navigate("/login");
     });
   };
   const logoutAllHandler = () => {
-    axios.post("http://localhost:3000/users/logoutAll").then((res) => {
+    axios.post(`${BASE_URL}/users/logoutAll`).then((res) => {
       dispatch(logout());
       toast.error("User LogOut From all Devices Successfully!");
       navigate("/login");

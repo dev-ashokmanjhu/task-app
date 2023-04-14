@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../../utils/constants";
 
 const UpdateTask = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const UpdateTask = () => {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/tasks/${id}`)
+      .get(`${BASE_URL}/tasks/${id}`)
       .then((res) => {
         setEnteredDescription(res.data.description);
         setEnteredTaskStatus(res.data.completed.toString());
@@ -29,9 +30,9 @@ const UpdateTask = () => {
       completed: enteredTaskStatus,
     };
     axios
-      .put(`http://localhost:3000/task/${id}`, data)
+      .put(`${BASE_URL}/task/${id}`, data)
       .then((res) => {
-        toast("Task Updated");
+        toast.success("Task Updated 🎉");
         navigate("/");
       })
       .catch((err) => toast(err?.response?.data?.meassage));

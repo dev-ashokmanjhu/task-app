@@ -3,12 +3,13 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../../UI/Spinner";
+import { BASE_URL } from "../../utils/constants";
 
 const AllTasks = () => {
   const [tasks, setTasks] = useState(null);
   const getTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/tasks");
+      const response = await axios.get(`${BASE_URL}/tasks`);
       await setTasks(response?.data);
     } catch (error) {
       toast.error(error?.response?.data?.error);
@@ -17,7 +18,7 @@ const AllTasks = () => {
 
   const taskDeleteHandler = useCallback((id) => {
     axios
-      .delete(`http://localhost:3000/task/${id}`)
+      .delete(`${BASE_URL}/task/${id}`)
       .catch((err) => toast(err?.response?.data?.meassage));
     getTasks();
     toast.warn("Task Deleted");
