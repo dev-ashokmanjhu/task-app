@@ -11,7 +11,7 @@ const AllTasks = () => {
       const response = await axios.get("http://localhost:3000/tasks");
       await setTasks(response?.data);
     } catch (error) {
-      toast(error?.response?.data?.error);
+      toast.error(error?.response?.data?.error);
     }
   };
 
@@ -43,57 +43,68 @@ const AllTasks = () => {
               Your Tasks
             </h5>
           </div>
-          <div className="flow-root">
-            <ul
-              role="list"
-              className="divide-y divide-gray-200 dark:divide-gray-700"
-            >
-              {tasks.map((task) => {
-                return (
-                  <li className="py-3 sm:py-4" key={task._id}>
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-shrink-0">
-                        <img
-                          className="w-8 h-8 rounded-full"
-                          src="https://pixlok.com/wp-content/uploads/2022/02/Profile-Icon-SVG-09856789.png"
-                          alt="Neil image"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                          {task.description}
-                        </p>
-                        {/* <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+          {tasks.length === 0 ? (
+            <>
+              <h1 className="text-center">You Have't added Task</h1>
+              <Link to={`/newtask`}>
+                <div className="text-center border-2 border-blue-600 rounded-lg px-3 py-2 text-blue-400 cursor-pointer hover:bg-blue-600 hover:text-blue-200">
+                  Add Task
+                </div>
+              </Link>
+            </>
+          ) : (
+            <div className="flow-root">
+              <ul
+                role="list"
+                className="divide-y divide-gray-200 dark:divide-gray-700"
+              >
+                {tasks.map((task) => {
+                  return (
+                    <li className="py-3 sm:py-4" key={task._id}>
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <img
+                            className="w-8 h-8 rounded-full"
+                            src="https://pixlok.com/wp-content/uploads/2022/02/Profile-Icon-SVG-09856789.png"
+                            alt="Neil image"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                            {task.description}
+                          </p>
+                          {/* <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                         {task.description}
                       </p> */}
-                      </div>
-                      <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                        {task.completed ? "Done" : "In Proggress"}
-                      </div>
-                      <Link to={`/updatetask/${task._id}`}>
-                        <div className="border-2 border-blue-600 rounded-lg px-3 py-2 text-blue-400 cursor-pointer hover:bg-blue-600 hover:text-blue-200">
-                          Edit
                         </div>
-                      </Link>
-                      <div
-                        className="border-2 border-red-600 rounded-lg px-3 py-2 text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200"
-                        onClick={() => taskDeleteHandler(task._id)}
-                      >
-                        Delete
-                      </div>
-                      {/* {isUpdating && (
+                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                          {task.completed ? "Done" : "In Proggress"}
+                        </div>
+                        <Link to={`/updatetask/${task._id}`}>
+                          <div className="border-2 border-blue-600 rounded-lg px-3 py-2 text-blue-400 cursor-pointer hover:bg-blue-600 hover:text-blue-200">
+                            Edit
+                          </div>
+                        </Link>
+                        <div
+                          className="border-2 border-red-600 rounded-lg px-3 py-2 text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200"
+                          onClick={() => taskDeleteHandler(task._id)}
+                        >
+                          Delete
+                        </div>
+                        {/* {isUpdating && (
                         <UpdateTask
                           onClose={onClose}
                           id={task._id}
                           task={task}
                         />
                       )} */}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </>

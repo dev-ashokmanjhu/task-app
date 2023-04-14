@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/authSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -22,6 +25,7 @@ const Profile = () => {
   };
   const logoutAllHandler = () => {
     axios.post("http://localhost:3000/users/logoutAll").then((res) => {
+      dispatch(logout());
       toast.error("User LogOut From all Devices Successfully!");
       navigate("/login");
     });
