@@ -1,11 +1,8 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../store/authSlice";
-import { toast } from "react-toastify";
+import { loginUser } from "../../store/authSlice";
 import Spinner from "../../UI/Spinner";
-import { BASE_URL } from "../../utils/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,17 +18,12 @@ const Login = () => {
       email: enteredEmail,
       password: enteredPassword,
     };
-    axios
-      .post(`${BASE_URL}/users/login`, data)
-      .then((res) => {
-        localStorage.removeItem("token");
-        localStorage.setItem("token", res?.data?.token);
-        dispatch(login());
-        setisLoading(false);
+    dispatch(loginUser(data))
+      .then(() => {
         navigate("/");
+        setisLoading(false);
       })
       .catch((err) => {
-        toast(err?.response?.data?.error);
         setisLoading(false);
       });
   };

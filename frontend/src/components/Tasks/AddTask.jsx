@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { BASE_URL } from "../../utils/constants";
+import { useDispatch } from "react-redux";
+import { createTask } from "../../store/taskSlice";
+import { useNavigate } from "react-router-dom";
 
 const AddTask = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredTaskStatus, setEnteredTaskStatus] = useState(false);
@@ -19,13 +20,14 @@ const AddTask = () => {
       description: enteredDescription,
       completed: enteredTaskStatus,
     };
-    axios
-      .post(`${BASE_URL}/task`, data)
-      .then((res) => {
-        toast.success("Task Created");
+    dispatch(createTask(data))
+      .then(() => {
         navigate("/");
       })
-      .catch((err) => toast.error(err?.response?.data?.meassage));
+      .catch((err) => {
+        console.log(err);
+        toast.error(err?.response?.data?.error);
+      });
   };
 
   return (

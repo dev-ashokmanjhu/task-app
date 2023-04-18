@@ -1,11 +1,9 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../store/authSlice";
+import { registerUser } from "../../store/authSlice";
 import { toast } from "react-toastify";
 import Spinner from "../../UI/Spinner";
-import { BASE_URL } from "../../utils/constants";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -23,17 +21,14 @@ const Register = () => {
       email: enteredEmail,
       password: enteredPassword,
     };
-    axios
-      .post(`${BASE_URL}/users`, data)
-      .then((res) => {
-        localStorage.setItem("token", res?.data?.token);
-        dispatch(login());
-        toast("Registered Successfully");
+    dispatch(registerUser(data))
+      .then(() => {
         navigate("/");
         setisLoading(false);
       })
       .catch((err) => {
-        toast(err?.response?.data?.meassage), setisLoading(false);
+        toast(err?.response?.data?.meassage);
+        setisLoading(false);
       });
   };
 

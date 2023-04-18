@@ -1,26 +1,21 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../../UI/Spinner";
 import { BASE_URL } from "../../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTasks } from "../../store/taskSlice";
 
 const AllTasks = () => {
-  const [tasks, setTasks] = useState(null);
-  const getTasks = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/tasks`);
-      await setTasks(response?.data);
-    } catch (error) {
-      toast.error(error?.response?.data?.error);
-    }
-  };
+  const dispatch = useDispatch();
+  const { tasks, status } = useSelector((state) => state.task);
 
   const taskDeleteHandler = useCallback((id) => {
     axios
       .delete(`${BASE_URL}/task/${id}`)
       .catch((err) => toast(err?.response?.data?.meassage));
-    getTasks();
+    dispatch(fetchTasks());
     toast.warn("Task Deleted");
   }, []);
 
@@ -28,11 +23,28 @@ const AllTasks = () => {
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${localStorage.getItem("token")}`;
-    getTasks();
   }, [taskDeleteHandler]);
 
-  if (!tasks) {
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, []);
+
+  if (status === "loading") {
     return <Spinner color="white" />;
+  }
+  if (status === "failed") {
+    return (
+      <div className="flex justify-center">
+        <div className="w-3/4  flex justify-center flex-col">
+          <h1 className="text-center">Please Authenticate First</h1>
+          <Link to={`/login`}>
+            <div className="text-center  border-2 border-blue-600 rounded-lg px-3 py-2 text-blue-400 cursor-pointer hover:bg-blue-600 hover:text-blue-200">
+              Login
+            </div>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -74,9 +86,6 @@ const AllTasks = () => {
                           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                             {task.description}
                           </p>
-                          {/* <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                        {task.description}
-                      </p> */}
                         </div>
                         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                           {task.completed ? "Done" : "In Proggress"}
@@ -92,13 +101,6 @@ const AllTasks = () => {
                         >
                           Delete
                         </div>
-                        {/* {isUpdating && (
-                        <UpdateTask
-                          onClose={onClose}
-                          id={task._id}
-                          task={task}
-                        />
-                      )} */}
                       </div>
                     </li>
                   );

@@ -1,23 +1,20 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../store/authSlice";
 import { toast } from "react-toastify";
-import { BASE_URL } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const UpdateProfile = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [enteredName, setEnteredName] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/users/me`)
-      .then((res) => {
-        setEnteredEmail(res?.data?.email);
-        setEnteredName(res?.data?.name);
-      })
-      .catch((err) => toast(err?.response?.data?.meassage));
+    setEnteredEmail(user.email || "");
+    setEnteredName(user.name || "");
   }, []);
 
   const UpdateProfileHandler = (e) => {
@@ -27,13 +24,13 @@ const UpdateProfile = () => {
       email: enteredEmail,
       // password: enteredPassword,
     };
-    axios
-      .put(`${BASE_URL}/users/me`, data)
-      .then((res) => {
-        toast("Profile has been Updated");
+    dispatch(updateUser(data))
+      .then(() => {
         navigate("/profile");
       })
-      .catch((err) => toast(err?.response?.data?.meassage));
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

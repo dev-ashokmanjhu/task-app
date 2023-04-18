@@ -2,28 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { logout } from "../../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, logout } from "../../store/authSlice";
 import { BASE_URL } from "../../utils/constants";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [user, setUser] = useState({});
+  const user = useSelector((state) => state.auth.user) || {};
+
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/users/me`)
-      .then((res) => {
-        setUser(res?.data);
-      })
-      .catch((err) => toast(err?.response?.data?.meassage));
+    dispatch(getUser());
   }, []);
+
   const deleteProfileHandler = () => {
     axios.delete(`${BASE_URL}/users/me`).then((res) => {
       toast.error("User Deleted Successfully!");
       navigate("/login");
     });
   };
+
   const logoutAllHandler = () => {
     axios.post(`${BASE_URL}/users/logoutAll`).then((res) => {
       dispatch(logout());

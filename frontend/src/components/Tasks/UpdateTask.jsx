@@ -5,23 +5,25 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../utils/constants";
+import { useSelector } from "react-redux";
 
 const UpdateTask = () => {
   const navigate = useNavigate();
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredTaskStatus, setEnteredTaskStatus] = useState(false);
-  const [task, setTask] = useState([]);
+
+  const tasks = useSelector((state) => state.task.tasks);
 
   const { id } = useParams();
+
+  const task = tasks.find((task) => task._id === id);
+
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/tasks/${id}`)
-      .then((res) => {
-        setEnteredDescription(res.data.description);
-        setEnteredTaskStatus(res.data.completed.toString());
-      })
-      .catch((err) => toast(err?.response?.data?.meassage));
-  }, []);
+    if (tasks.length > 0) {
+      setEnteredDescription(task.description);
+      setEnteredTaskStatus(task.completed.toString());
+    }
+  }, [task]);
 
   const updateTaskHandler = (e) => {
     e.preventDefault();

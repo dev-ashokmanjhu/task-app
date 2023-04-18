@@ -1,55 +1,48 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-// const taskSlice = createSlice({
-//   name: "task",
-//   initialState: {
-//     tasks: [],
-//   },
-//   reducers: {
-//     fetchtasks: async (state, actions) => {
-//       console.log(actions.payload);
-//       return (state = {
-//         tasks: actions.payload,
-//       });
-//       // state.tasks = actions.payload;
-//       console.log(state.tasks);
-//     },
-//   },
-// });
+import { toast } from "react-toastify";
 
-// export const { fetchtasks } = taskSlice.actions;
-
-// export default taskSlice.reducer;
-export const getProducts = createAsyncThunk(
-  "products/getProducts",
-  async () => {
-    const res = await axios.get(`${BASE_URL}/tasks`);
-    console.log(res);
-    return { data: res.data, status: res.status };
+export const fetchTasks = createAsyncThunk("fetchTasks", async () => {
+  const res = await axios.get(`${BASE_URL}/tasks`);
+  return res.data;
+});
+export const createTask = createAsyncThunk(
+  "createTask",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/task`, data);
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message);
+    }
   }
 );
 
-const getProductsSlice = createSlice({
+const taskSlice = createSlice({
   name: "products",
   initialState: {
-    list: [],
+    tasks: [],
     status: null,
   },
   extraReducers: {
-    [getProducts.pending]: (state) => {
+    [fetchTasks.pending]: (state) => {
       state.status = "loading";
     },
-    [getProducts.fulfilled]: (state, { payload }) => {
-      console.log("produtcts payload: ", payload.data);
-      state.list = payload.data;
+    [fetchTasks.fulfilled]: (state, action) => {
+      state.tasks = action.payload;
       state.status = "success";
-      console.log(state.list);
     },
-    [getProducts.rejected]: (state) => {
+    [fetchTasks.rejected]: (state) => {
       state.status = "failed";
+    },
+    [createTask.fulfilled]: (state) => {
+      toast.success("Task Created");
+    },
+    [createTask.rejected]: (state, action) => {
+      toast.success(action.payload);
+      throw new Error(action.payload);
     },
   },
 });
 
-export default getProductsSlice.reducer;
+export default taskSlice.reducer;
