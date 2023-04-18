@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../store/authSlice";
 import Spinner from "../../UI/Spinner";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,8 +13,12 @@ const Login = () => {
   const [isLoading, setisLoading] = useState(false);
 
   const loginHandler = (e) => {
-    setisLoading(true);
     e.preventDefault();
+    if (enteredEmail.trim() === "" || enteredPassword.trim() === "") {
+      toast.info("Please Fill All The Fields");
+      return;
+    }
+    setisLoading(true);
     const data = {
       email: enteredEmail,
       password: enteredPassword,
